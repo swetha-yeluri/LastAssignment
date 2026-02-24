@@ -1,0 +1,172 @@
+/***********************
+ LEVEL 1 – DATE TASKS
+************************/
+
+/* Task 1 – Digital Clock (Stops after 10 sec) */
+
+let count = 0;
+
+const clockInterval = setInterval(() => {
+  const now = new Date();
+
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+
+  console.log(`Clock: ${hours}:${minutes}:${seconds} ${ampm}`);
+
+  count++;
+  if (count === 10) {
+    clearInterval(clockInterval);
+    console.log("Clock Stopped\n");
+  }
+}, 1000);
+
+
+/* Task 2 – Age Calculator */
+
+function calculateAge(year, month, day) {
+  const today = new Date();
+  const birthDate = new Date(year, month - 1, day);
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) {
+    months--;
+    days += 30;
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  console.log(`Age: ${years} years, ${months} months, ${days} days\n`);
+}
+
+calculateAge(2000, 5, 15);
+
+
+
+/***********************
+ LEVEL 2 – ASYNC TASKS
+************************/
+
+/* Task 3 – Execution Order */
+
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Middle");
+}, 0);
+
+console.log("End\n");
+
+
+/* Task 4 – Countdown Timer */
+
+let num = 10;
+
+const countdown = setInterval(() => {
+  console.log("Countdown:", num);
+  num--;
+
+  if (num < 0) {
+    clearInterval(countdown);
+    console.log("Time Up!\n");
+  }
+}, 1000);
+
+
+
+/***********************
+ LEVEL 3 – PROMISE TASKS
+************************/
+
+/* Task 5 – Custom Promise */
+
+function checkResult(marks) {
+  return new Promise((resolve, reject) => {
+    if (marks >= 35) {
+      resolve("Pass");
+    } else {
+      reject("Fail");
+    }
+  });
+}
+
+checkResult(40)
+  .then(result => console.log("Result:", result))
+  .catch(error => console.log("Result:", error))
+  .finally(() => console.log("Exam Completed\n"));
+
+
+
+/* Task 6 – Promise Chain */
+
+function step1() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log("Step 1 Completed");
+      resolve();
+    }, 1000);
+  });
+}
+
+function step2() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log("Step 2 Completed");
+      resolve();
+    }, 1000);
+  });
+}
+
+function step3() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log("Step 3 Completed");
+      resolve();
+    }, 1000);
+  });
+}
+
+step1()
+  .then(step2)
+  .then(step3)
+  .then(() => console.log("All Steps Done\n"));
+
+
+
+/***********************
+ LEVEL 4 – FETCH API TASKS
+************************/
+
+fetch("https://fakestoreapi.com/products")
+  .then(response => response.json())
+  .then(data => {
+
+    console.log("Total Products:", data.length);
+
+    console.log("\nProduct Titles:");
+    data.forEach(product => {
+      console.log(product.title);
+    });
+
+    console.log("\nFirst Product Price:", data[0].price);
+
+    /* Filter products above 500 */
+    const expensive = data
+      .filter(product => product.price > 500)
+      .map(product => ({
+        title: product.title,
+        price: product.price
+      }));
+
+    console.log("\nExpensive Products (>500):");
+    console.log(expensive);
